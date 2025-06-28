@@ -276,7 +276,7 @@
     whatsappBtn.addEventListener("click", () => {
       const firstQuestion = activeQuestions[0];
       const keyword = firstQuestion.replace(/^Apakah kamu\s+/i, "").replace(/\?$/, "").trim();
-      const message = `Aku mengaku ${keyword} (https://thedark6678.github.io/thedark/)`;
+      const message = `Aku mengaku ${keyword} (https://thedark6678.github.io/tes.kejujuran/)`;
       const url = "https://api.whatsapp.com/send?text=" + encodeURIComponent(message);
       window.open(url, "_blank");
     });
