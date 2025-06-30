@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kalkulator MTK</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background: #fce4ec;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    .calculator {
+      background: white;
+      padding: 20px;
+      margin-top: 40px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      width: 330px;
+      text-align: center;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #d81b60;
+    }
+
+    .soal {
+      font-size: 22px;
+      margin: 10px 0;
+      color: #333;
+    }
+
+    input.display {
+      width: 100%;
+      height: 35px;
+      font-size: 1.2em;
+      text-align: right;
+      padding: 5px 10px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 2px solid #ccc;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      font-size: 1.1em;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #ec407a;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #d81b60;
+    }
+
+    #shareBtn {
+      display: none;
+      margin-top: 40px;
+      background-color: #25D366;
+      padding: 15px 25px;
+      font-size: 1.2em;
+      border-radius: 12px;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .linktree {
+      margin: 30px 0 20px;
+      text-align: center;
+    }
+
+    .linktree a {
+      text-decoration: none;
+      background: #000;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    .fade-out {
+      opacity: 0;
+      transition: opacity 0.6s ease-out;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator" id="calcBox">
+    <div class="title">Kerjakan soal MTK sederhana di bawah ini:</div>
+    <div class="soal" id="soal">?</div>
+    <input type="text" id="display" class="display" placeholder="Masukkan jawaban">
+
+    <div class="buttons" id="buttonContainer">
+      <button onclick="clearDisplay()">C</button>
+      <button onclick="backspace()">←</button>
+      <button onclick="append('%')">%</button>
+      <button onclick="append('/')">÷</button>
+
+      <button onclick="pressRandom()">7</button>
+      <button onclick="pressRandom()">8</button>
+      <button onclick="pressRandom()">9</button>
+      <button onclick="append('*')">×</button>
+
+      <button onclick="pressRandom()">4</button>
+      <button onclick="pressRandom()">5</button>
+      <button onclick="pressRandom()">6</button>
+      <button onclick="append('-')">−</button>
+
+      <button onclick="pressRandom()">1</button>
+      <button onclick="pressRandom()">2</button>
+      <button onclick="pressRandom()">3</button>
+      <button onclick="append('+')">+</button>
+
+      <button onclick="append(',')">,</button>
+      <button onclick="pressRandom()">0</button>
+      <button onclick="append('.')">.</button>
+      <button onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <button id="shareBtn" onclick="bagikan()">Bagikan ke WhatsApp</button>
+
+  <div class="linktree">
+    <a href="https://linktr.ee/thedark01" target="_blank">Hubungi Admin</a>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+    const soalEl = document.getElementById("soal");
+    const shareBtn = document.getElementById("shareBtn");
+    const calcBox = document.getElementById("calcBox");
+
+    let currentSoal = { a: 0, b: 0, op: "+", result: 0 };
+    let angkaPertamaSudahMuncul = false;
+    let angkaKeduaSudahMuncul = false;
+    let tekanKe = 0;
+
+    function getRandomChar() {
+      const chars = "34567890.,+-*/";
+      const rand = Math.random();
+      const angka1 = currentSoal.a.toString();
+      const angka2 = currentSoal.b.toString();
+
+      if (!angkaPertamaSudahMuncul) {
+        if (rand < 0.99) {
+          angkaPertamaSudahMuncul = true;
+          return angka1;
+        } else {
+          return chars[Math.floor(Math.random() * chars.length)];
+        }
+      }
+
+      if (!angkaKeduaSudahMuncul) {
+        if (rand < 0.001) {
+          angkaKeduaSudahMuncul = true;
+          return angka2;
+        } else {
+          return chars[Math.floor(Math.random() * chars.length)];
+        }
+      }
+
+      return chars[Math.floor(Math.random() * chars.length)];
+    }
+
+    function pressRandom() {
+      const char = getRandomChar();
+      display.value += char;
+
+      if (char === currentSoal.a.toString()) angkaPertamaSudahMuncul = true;
+      if (char === currentSoal.b.toString()) angkaKeduaSudahMuncul = true;
+
+      tekanKe++;
+      if (tekanKe % 9 === 0) {
+        angkaPertamaSudahMuncul = false;
+        angkaKeduaSudahMuncul = false;
+      }
+    }
+
+    function append(char) {
+      display.value += char;
+      if (char === currentSoal.a.toString()) angkaPertamaSudahMuncul = true;
+      if (char === currentSoal.b.toString()) angkaKeduaSudahMuncul = true;
+    }
+
+    function clearDisplay() {
+      display.value = "";
+    }
+
+    function backspace() {
+      display.value = display.value.slice(0, -1);
+    }
+
+    function calculate() {
+      try {
+        let result = eval(display.value);
+
+        if (result === currentSoal.result) {
+          display.value = result;
+          calcBox.classList.add('fade-out');
+          setTimeout(() => {
+            calcBox.style.display = 'none';
+            shareBtn.style.display = 'inline-block';
+          }, 600);
+        } else {
+          display.value = result;
+        }
+
+        generateSoal();
+      } catch {
+        display.value = "ERROR";
+      }
+    }
+
+    function generateSoal() {
+      const a = Math.floor(Math.random() * 10) + 1;
+      const b = Math.floor(Math.random() * 10) + 1;
+      const ops = ['+', '-', '*'];
+      const op = ops[Math.floor(Math.random() * ops.length)];
+
+      let result;
+      if (op === '+') result = a + b;
+      else if (op === '-') result = a - b;
+      else if (op === '*') result = a * b;
+
+      currentSoal = { a, b, op, result };
+      soalEl.textContent = `${a} ${op} ${b}`;
+
+      angkaPertamaSudahMuncul = false;
+      angkaKeduaSudahMuncul = false;
+      tekanKe = 0;
+    }
+
+    function bagikan() {
+      const pesan = "Aku berhasil menyelesaikan tugas MTK dari Developer bajingan itu😡😡😡🤬🤬🤬😡🤬😡😡😡😡😡🗿🗿🗿🗿🗿🗿🗿🗿";
+      const url = "https://wa.me/?text=" + encodeURIComponent(pesan);
+      window.open(url, "_blank");
+    }
+
+    display.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        calculate();
+      }
+    });
+
+    generateSoal();
+  </script>
+
+</body>
+</html>
