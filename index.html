@@ -1,269 +1,154 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kalkulator MTK</title>
+  <meta charset="UTF-8">
+  <title>cek kewarasan</title>
   <style>
     body {
-      font-family: 'Comic Sans MS', cursive;
-      background: #fce4ec;
+      background-color: #111;
+      color: #eee;
+      font-family: 'Segoe UI', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 0;
-      min-height: 100vh;
+      padding: 40px;
     }
-
-    .calculator {
-      background: white;
-      padding: 20px;
-      margin-top: 40px;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      width: 330px;
-      text-align: center;
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 5px;
+      border-radius: 6px;
+      border: none;
     }
-
-    .title {
-      font-size: 18px;
-      font-weight: bold;
-      color: #d81b60;
-    }
-
-    .soal {
-      font-size: 22px;
-      margin: 10px 0;
-      color: #333;
-    }
-
-    input.display {
-      width: 100%;
-      height: 35px;
-      font-size: 1.2em;
-      text-align: right;
-      padding: 5px 10px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      border: 2px solid #ccc;
-    }
-
-    .buttons {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
     button {
-      font-size: 1.1em;
-      padding: 12px;
-      border: none;
-      border-radius: 10px;
-      background: #ec407a;
-      color: white;
+      background-color: #00ffd5;
       cursor: pointer;
-      transition: background 0.2s;
+      font-weight: bold;
     }
-
-    button:hover {
-      background: #d81b60;
-    }
-
-    #shareBtn {
-      display: none;
-      margin-top: 40px;
-      background-color: #25D366;
-      padding: 15px 25px;
-      font-size: 1.2em;
-      border-radius: 12px;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-
-    .linktree {
-      margin: 30px 0 20px;
+    .result {
+      margin-top: 30px;
+      font-size: 20px;
       text-align: center;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: #222;
     }
-
-    .linktree a {
-      text-decoration: none;
-      background: #000;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      display: inline-block;
+    .citer {
+      background-color: #440000;
+      color: #ff4b4b;
+      font-weight: bold;
     }
-
-    .fade-out {
-      opacity: 0;
-      transition: opacity 0.6s ease-out;
-      pointer-events: none;
+    .form-box {
+      background-color: #1a1a1a;
+      padding: 15px;
+      margin-top: 30px;
+      border-radius: 10px;
+      max-width: 400px;
+      width: 100%;
+      display: none;
+    }
+    h1, h2 {
+      color: #00ffd5;
     }
   </style>
 </head>
 <body>
 
-  <div class="calculator" id="calcBox">
-    <div class="title">Kerjakan soal MTK sederhana di bawah ini:</div>
-    <div class="soal" id="soal">?</div>
-    <input type="text" id="display" class="display" placeholder="Masukkan jawaban">
+  <h1>apakah kau belok</h1>
 
-    <div class="buttons" id="buttonContainer">
-      <button onclick="clearDisplay()">C</button>
-      <button onclick="backspace()">←</button>
-      <button onclick="append('%')">%</button>
-      <button onclick="append('/')">÷</button>
+  <input type="text" id="namaInput" placeholder="Masukkan nama kamu...">
+  <button onclick="hitungLGBT()">periksa</button>
+  <div id="hasilOutput" class="result">Masukkan nama terlebih dahulu.</div>
 
-      <button onclick="pressRandom()">7</button>
-      <button onclick="pressRandom()">8</button>
-      <button onclick="pressRandom()">9</button>
-      <button onclick="append('*')">×</button>
-
-      <button onclick="pressRandom()">4</button>
-      <button onclick="pressRandom()">5</button>
-      <button onclick="pressRandom()">6</button>
-      <button onclick="append('-')">−</button>
-
-      <button onclick="pressRandom()">1</button>
-      <button onclick="pressRandom()">2</button>
-      <button onclick="pressRandom()">3</button>
-      <button onclick="append('+')">+</button>
-
-      <button onclick="append(',')">,</button>
-      <button onclick="pressRandom()">0</button>
-      <button onclick="append('.')">.</button>
-      <button onclick="calculate()">=</button>
-    </div>
-  </div>
-
-  <button id="shareBtn" onclick="bagikan()">Bagikan ke WhatsApp</button>
-
-  <div class="linktree">
-    <a href="https://linktr.ee/thedark01" target="_blank">Hubungi Admin</a>
+  <div class="form-box" id="formPremium">
+    <h2>Tambah User Premium</h2>
+    <input type="text" id="premiumNama" placeholder="Nama premium">
+    <input type="text" id="pesanPremium" placeholder="Pesan custom">
+    <button onclick="tambahPremium()">Tambahkan</button>
+    <p style="font-size: 14px; color: #aaa;">Akses ini hanya tersedia untuk developer.<br>Persentase user premium: <b>0%</b></p>
   </div>
 
   <script>
-    const display = document.getElementById("display");
-    const soalEl = document.getElementById("soal");
-    const shareBtn = document.getElementById("shareBtn");
-    const calcBox = document.getElementById("calcBox");
+    const nilaiHuruf = {
+      a: -12, b: 10, c: -8, d: 9, e: -14, f: 11, g: -6, h: 15, i: -5, j: 12,
+      k: -20, l: 18, m: -7, n: 20, o: -9, p: 13, q: -1000, r: 17, s: -4,
+      t: 16, u: -11, v: -1000, w: 19, x: 10000, y: -3, z: 10000
+    };
 
-    let currentSoal = { a: 0, b: 0, op: "+", result: 0 };
-    let angkaPertamaSudahMuncul = false;
-    let angkaKeduaSudahMuncul = false;
-    let tekanKe = 0;
+    let namaPremium = {
+      "rahmat": "ampun dev",
+    };
 
-    function getRandomChar() {
-      const chars = "34567890.,+-*/";
-      const rand = Math.random();
-      const angka1 = currentSoal.a.toString();
-      const angka2 = currentSoal.b.toString();
+    let developerAktif = false;
 
-      if (!angkaPertamaSudahMuncul) {
-        if (rand < 0.99) {
-          angkaPertamaSudahMuncul = true;
-          return angka1;
-        } else {
-          return chars[Math.floor(Math.random() * chars.length)];
+    function getPesan(persen) {
+      if (persen <= -1000) return "🪽 Bro kau malaikat sejati (" + persen + "%)";
+      if (persen <= -800) return "🧬 Bro kau bukan manusia (" + persen + "%)";
+      if (persen < 0) return "✨ Bro anda sangat suci (" + persen + "%)";
+      if (persen === 0) return "⚪ Bro netral suci, belum tersentuh (0%)";
+      if (persen <= 20) return "🙂 Bro kau masih normal (" + persen + "%)";
+      if (persen <= 40) return "🤨 Bro kau rada curiga sih (" + persen + "%)";
+      if (persen <= 60) return "😬 Bro kau diambang batas (" + persen + "%)";
+      if (persen <= 80) return "😳 Bro kau nggak bisa diselamatkan (" + persen + "%)";
+      if (persen <= 99) return "💀 Bro kau hampir tamat (" + persen + "%)";
+      if (persen === 100) return "☠ Bro kau sudah tidak tertolong (100%)";
+      if (persen < 10000) return "🔥 Bro kau meluncur ke neraka (" + persen + "%)";
+      return "💣 Bro kau pantas mati (" + persen + "%)";
+    }
+
+    function hitungLGBT() {
+      const input = document.getElementById("namaInput").value.trim().toLowerCase();
+      const hasil = document.getElementById("hasilOutput");
+      const formPremium = document.getElementById("formPremium");
+
+      if (input === "developer") {
+        developerAktif = true;
+        formPremium.style.display = "block";
+        hasil.innerText = "🔓 Mode developer aktif! Sekarang kamu bisa menambahkan user premium.";
+        hasil.className = "result";
+        return;
+      }
+
+      if (namaPremium.hasOwnProperty(input)) {
+        hasil.innerHTML = `
+          ${namaPremium[input]}<br>
+          <strong>Persentase LGBT kamu: 0%</strong>
+        `;
+        hasil.className = "result citer";
+        return;
+      }
+
+      let total = 0;
+      for (let i = 0; i < input.length; i++) {
+        const huruf = input[i];
+        if (nilaiHuruf.hasOwnProperty(huruf)) {
+          total += nilaiHuruf[huruf];
         }
       }
 
-      if (!angkaKeduaSudahMuncul) {
-        if (rand < 0.001) {
-          angkaKeduaSudahMuncul = true;
-          return angka2;
-        } else {
-          return chars[Math.floor(Math.random() * chars.length)];
-        }
+      if (total > 100000) total = 100000;
+      hasil.innerText = getPesan(total);
+      hasil.className = "result";
+    }
+
+    function tambahPremium() {
+      const nama = document.getElementById("premiumNama").value.trim().toLowerCase();
+      const pesan = document.getElementById("pesanPremium").value.trim();
+
+      if (!developerAktif) {
+        alert("❌ Kau bukan dev. Akses ditolak.");
+        return;
       }
 
-      return chars[Math.floor(Math.random() * chars.length)];
-    }
-
-    function pressRandom() {
-      const char = getRandomChar();
-      display.value += char;
-
-      if (char === currentSoal.a.toString()) angkaPertamaSudahMuncul = true;
-      if (char === currentSoal.b.toString()) angkaKeduaSudahMuncul = true;
-
-      tekanKe++;
-      if (tekanKe % 9 === 0) {
-        angkaPertamaSudahMuncul = false;
-        angkaKeduaSudahMuncul = false;
+      if (nama && pesan) {
+        namaPremium[nama] = pesan;
+        alert(`✅ Nama premium "${nama}" berhasil ditambahkan.`);
+        document.getElementById("premiumNama").value = '';
+        document.getElementById("pesanPremium").value = '';
+      } else {
+        alert("❗ Isi nama dan pesan dulu ya.");
       }
     }
-
-    function append(char) {
-      display.value += char;
-      if (char === currentSoal.a.toString()) angkaPertamaSudahMuncul = true;
-      if (char === currentSoal.b.toString()) angkaKeduaSudahMuncul = true;
-    }
-
-    function clearDisplay() {
-      display.value = "";
-    }
-
-    function backspace() {
-      display.value = display.value.slice(0, -1);
-    }
-
-    function calculate() {
-      try {
-        let result = eval(display.value);
-
-        if (result === currentSoal.result) {
-          display.value = result;
-          calcBox.classList.add('fade-out');
-          setTimeout(() => {
-            calcBox.style.display = 'none';
-            shareBtn.style.display = 'inline-block';
-          }, 600);
-        } else {
-          display.value = result;
-        }
-
-        generateSoal();
-      } catch {
-        display.value = "ERROR";
-      }
-    }
-
-    function generateSoal() {
-      const a = Math.floor(Math.random() * 10) + 1;
-      const b = Math.floor(Math.random() * 10) + 1;
-      const ops = ['+', '-', '*'];
-      const op = ops[Math.floor(Math.random() * ops.length)];
-
-      let result;
-      if (op === '+') result = a + b;
-      else if (op === '-') result = a - b;
-      else if (op === '*') result = a * b;
-
-      currentSoal = { a, b, op, result };
-      soalEl.textContent = `${a} ${op} ${b}`;
-
-      angkaPertamaSudahMuncul = false;
-      angkaKeduaSudahMuncul = false;
-      tekanKe = 0;
-    }
-
-    function bagikan() {
-      const pesan = "Aku berhasil menyelesaikan tugas MTK dari Developer bajingan itu😡😡😡🤬🤬🤬😡🤬😡😡😡😡😡🗿🗿🗿🗿🗿🗿🗿🗿";
-      const url = "https://wa.me/?text=" + encodeURIComponent(pesan);
-      window.open(url, "_blank");
-    }
-
-    display.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        calculate();
-      }
-    });
-
-    generateSoal();
   </script>
 
 </body>
